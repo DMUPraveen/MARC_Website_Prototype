@@ -1,0 +1,64 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const people = await getCollection("people");
+---
+
+<style>
+    a.block {
+        transition:
+            transform 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+            box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 0.75rem;
+        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.04);
+        background: white;
+        cursor: pointer;
+        outline: none;
+    }
+    a.block:hover,
+    a.block:focus-visible {
+        transform: translateY(-4px) scale(1.03);
+        box-shadow:
+            0 6px 24px 0 rgba(0, 0, 0, 0.1),
+            0 1.5px 6px 0 rgba(0, 0, 0, 0.06);
+        background: #f9fafb;
+        text-decoration: none;
+    }
+</style>
+
+<BaseLayout>
+    <section class="max-w-4xl mx-auto py-10">
+        <h1 class="text-4xl font-bold mb-8 text-center text-primary">
+            Our People
+        </h1>
+        <ul class="grid gap-8 md:grid-cols-2">
+            {
+                people.map((person) => (
+                    <li>
+                        <a
+                            href={`/people/${person.id}/`}
+                            class="block h-full w-full"
+                        >
+                            <div class="card-body">
+                                <h2 class="card-title text-2xl text-secondary">
+                                    {person.data.name}
+                                </h2>
+                                <p>
+                                    <span class="font-semibold">Post:</span>{" "}
+                                    {person.data.post}
+                                </p>
+                                <p>
+                                    <span class="font-semibold">Email:</span>{" "}
+                                    <span class="link link-primary">
+                                        {person.data.email}
+                                    </span>
+                                </p>
+                            </div>
+                        </a>
+                    </li>
+                ))
+            }
+        </ul>
+    </section>
+</BaseLayout>

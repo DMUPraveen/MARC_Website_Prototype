@@ -1,0 +1,39 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import "../../styles/app.css";
+export async function getStaticPaths() {
+    const people = await getCollection("people");
+    return people.map((person) => ({
+        params: { slug: person.id },
+        props: { person },
+    }));
+}
+
+const { person } = Astro.props;
+const { Content } = await render(person);
+---
+
+<BaseLayout>
+    <main class="flex justify-center items-center min-h-screen bg-base-200">
+        <div class="card w-full max-w-xl bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title text-3xl font-bold text-primary">
+                    {person.data.name}
+                </h2>
+                <p class="text-lg text-secondary">{person.data.post}</p>
+                <p class="text-md">
+                    <span class="font-semibold">Email:</span>
+                    <a
+                        href={`mailto:${person.data.email}`}
+                        class="link link-primary">{person.data.email}</a
+                    >
+                </p>
+                <div class="divider"></div>
+                <article class="prose max-w-none">
+                    <Content />
+                </article>
+            </div>
+        </div>
+    </main>
+</BaseLayout>

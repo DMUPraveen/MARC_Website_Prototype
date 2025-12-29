@@ -11,6 +11,13 @@ export async function getStaticPaths() {
     }));
 }
 
+const people = await getCollection("people");
+// Match people with projectMembers with people emails creating a dictionary
+const peopleDict: { [email: string]: (typeof people)[number] } = {};
+people.forEach((person) => {
+    peopleDict[person.data.email] = person;
+});
+
 const { project } = Astro.props;
 const { Content } = await render(project);
 ---
@@ -22,7 +29,37 @@ const { Content } = await render(project);
             <p><strong>Research Area:</strong> {project.data.researchArea}</p>
             <p>
                 <strong>Authors:</strong>
-                {project.data.projectMembers.join(", ")}
+                {
+                    project.data.projectMembers.map((email) => (
+                        <a
+                            href={
+                                peopleDict[email]
+                                    ? `/people/${peopleDict[email]?.id}/`
+                                    : ""
+                            }
+                            class="badge badge-ghost gap-1 no-underline"
+                        >
+                            {peopleDict[email]?.data.name || email}
+                        </a>
+                    ))
+                }
+            </p>
+            <p>
+                <strong>Supervisors:</strong>
+                {
+                    project.data.supervisors.map((email) => (
+                        <a
+                            href={
+                                peopleDict[email]
+                                    ? `/people/${peopleDict[email]?.id}/`
+                                    : ""
+                            }
+                            class="badge badge-ghost gap-1 no-underline"
+                        >
+                            {peopleDict[email]?.data.name || email}
+                        </a>
+                    ))
+                }
             </p>
             <div>
                 <Content />
