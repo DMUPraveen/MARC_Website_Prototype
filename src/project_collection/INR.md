@@ -6,10 +6,10 @@ projectMembers:
  - "e19445@eng.pdn.ac.lk"
 supervisors: 
  - "roshang@eng.pdn.ac.lk"
-researchArea: Biomedical Engineering and Wearables
+researchArea: Generative AI
 researchPillars: 
  - "AI in Engineering"
-coverImage: ./cover_images/Hyperspectral_Unmixing.jpg
+coverImage: ./cover_images/INR.png
 ---
 
 This is a dummy project

@@ -8,5 +8,5 @@ supervisors:
 researchArea: Biomedical Engineering and Wearables
 researchPillars: 
  - "AI in Engineering"
-coverImage: ./cover_images/Hyperspectral_Unmixing.jpg
+coverImage: ./cover_images/cover_dummy.jpg
 ---

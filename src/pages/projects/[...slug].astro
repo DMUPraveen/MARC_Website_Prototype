@@ -1,8 +1,10 @@
 ---
 import { getCollection, render } from "astro:content";
+import { Image } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import "../../styles/app.css";
 import Breadcrumb from "../../components/Breadcrumb.astro";
+import default_avatar from "../../assets/avatar_default.svg";
+import "../../styles/app.css";
 
 export async function getStaticPaths() {
     const projects = await getCollection("projects");
@@ -13,7 +15,6 @@ export async function getStaticPaths() {
 }
 
 const people = await getCollection("people");
-// Match people with projectMembers with people emails creating a dictionary
 const peopleDict: { [email: string]: (typeof people)[number] } = {};
 people.forEach((person) => {
     peopleDict[person.data.email] = person;
@@ -24,50 +25,231 @@ const { Content } = await render(project);
 ---
 
 <BaseLayout>
-    <Breadcrumb>
-        <li><a href="/">Home</a></li>
-        <li><a href="/projects">Projects</a></li>
-        <li>{project.data.project}</li>
-    </Breadcrumb>
-    <article class="prose prose-lg max-w-none">
-        <h1>{project.data.project}</h1>
-        <p><strong>Research Area:</strong> {project.data.researchArea}</p>
-        <p>
-            <strong>Authors:</strong>
-            {
-                project.data.projectMembers.map((email) => (
-                    <a
-                        href={
-                            peopleDict[email]
-                                ? `/people/${peopleDict[email]?.id}/`
-                                : ""
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        <Breadcrumb>
+            <li><a href="/">Home</a></li>
+            <li><a href="/projects">Projects</a></li>
+            <li class="opacity-70 truncate max-w-[200px]">
+                {project.data.project}
+            </li>
+        </Breadcrumb>
+
+        <div class="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-10">
+            {/* --- LEFT COLUMN: Main Content --- */}
+            <main class="lg:col-span-8 space-y-8">
+                {/* Header Info */}
+                <div>
+                    <div class="flex flex-wrap items-center gap-3 mb-4">
+                        <span class="badge badge-primary badge-lg"
+                            >{project.data.researchArea}</span
+                        >
+                        {
+                            project.data.researchPillars?.map((pillar) => (
+                                <span class="badge badge-outline">
+                                    {pillar}
+                                </span>
+                            ))
                         }
-                        class="badge badge-ghost gap-1 no-underline"
+                    </div>
+                    <h1
+                        class="text-4xl md:text-5xl font-extrabold text-base-content leading-tight"
                     >
-                        {peopleDict[email]?.data.name || email}
-                    </a>
-                ))
-            }
-        </p>
-        <p>
-            <strong>Supervisors:</strong>
-            {
-                project.data.supervisors.map((email) => (
-                    <a
-                        href={
-                            peopleDict[email]
-                                ? `/people/${peopleDict[email]?.id}/`
-                                : ""
+                        {project.data.project}
+                    </h1>
+                </div>
+
+                {/* Cover Image */}
+                {
+                    project.data.coverImage && (
+                        <div class="rounded-xl overflow-hidden shadow-lg border border-base-200">
+                            <Image
+                                src={project.data.coverImage}
+                                alt={project.data.project}
+                                width={900}
+                                height={500}
+                                class="w-full h-auto object-cover"
+                            />
+                        </div>
+                    )
+                }
+
+                {/* Markdown Content */}
+                <article
+                    class="prose prose-lg max-w-none prose-img:rounded-xl prose-headings:text-primary"
+                >
+                    <Content />
+                </article>
+            </main>
+
+            {/* --- RIGHT COLUMN: Sidebar (Team & Meta) --- */}
+            <aside class="lg:col-span-4 space-y-8">
+                {/* Team Card */}
+                <div
+                    class="card bg-base-100 shadow-md border border-base-200 sticky top-8"
+                >
+                    <div class="card-body">
+                        <h3
+                            class="card-title text-xl mb-4 flex items-center gap-2"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="h-5 w-5 text-primary"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                ><path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                                ></path></svg
+                            >
+                            Project Team
+                        </h3>
+
+                        {/* Supervisors */}
+                        {
+                            project.data.supervisors &&
+                                project.data.supervisors.length > 0 && (
+                                    <div class="mb-6">
+                                        <h4 class="text-xs font-bold uppercase text-base-content/50 mb-3 tracking-wider">
+                                            Supervisors
+                                        </h4>
+                                        <ul class="space-y-3">
+                                            {project.data.supervisors.map(
+                                                (email) => {
+                                                    const person =
+                                                        peopleDict[email];
+                                                    return (
+                                                        <li>
+                                                            <a
+                                                                href={
+                                                                    person
+                                                                        ? `/people/${person.id}/`
+                                                                        : "#"
+                                                                }
+                                                                class="flex items-center gap-3 group hover:bg-base-200 p-2 rounded-lg transition-colors -mx-2"
+                                                            >
+                                                                <div class="avatar">
+                                                                    <div class="w-10 h-10 rounded-full ring-1 ring-base-300">
+                                                                        <Image
+                                                                            src={
+                                                                                person
+                                                                                    ?.data
+                                                                                    .photo ||
+                                                                                default_avatar
+                                                                            }
+                                                                            alt={
+                                                                                person
+                                                                                    ?.data
+                                                                                    .name ||
+                                                                                email
+                                                                            }
+                                                                            width={
+                                                                                40
+                                                                            }
+                                                                            height={
+                                                                                40
+                                                                            }
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                <div>
+                                                                    <p class="font-semibold text-sm group-hover:text-primary transition-colors">
+                                                                        {person
+                                                                            ?.data
+                                                                            .name ||
+                                                                            email}
+                                                                    </p>
+                                                                    {person && (
+                                                                        <p class="text-xs text-base-content/60">
+                                                                            {
+                                                                                person
+                                                                                    .data
+                                                                                    .post
+                                                                            }
+                                                                        </p>
+                                                                    )}
+                                                                </div>
+                                                            </a>
+                                                        </li>
+                                                    );
+                                                },
+                                            )}
+                                        </ul>
+                                    </div>
+                                )
                         }
-                        class="badge badge-ghost gap-1 no-underline"
-                    >
-                        {peopleDict[email]?.data.name || email}
-                    </a>
-                ))
-            }
-        </p>
-        <div>
-            <Content />
+
+                        <div class="divider my-0"></div>
+
+                        {/* Members */}
+                        {
+                            project.data.projectMembers &&
+                                project.data.projectMembers.length > 0 && (
+                                    <div class="mt-6">
+                                        <h4 class="text-xs font-bold uppercase text-base-content/50 mb-3 tracking-wider">
+                                            Researchers
+                                        </h4>
+                                        <ul class="space-y-3">
+                                            {project.data.projectMembers.map(
+                                                (email) => {
+                                                    const person =
+                                                        peopleDict[email];
+                                                    return (
+                                                        <li>
+                                                            <a
+                                                                href={
+                                                                    person
+                                                                        ? `/people/${person.id}/`
+                                                                        : "#"
+                                                                }
+                                                                class="flex items-center gap-3 group hover:bg-base-200 p-2 rounded-lg transition-colors -mx-2"
+                                                            >
+                                                                <div class="avatar">
+                                                                    <div class="w-8 h-8 rounded-full ring-1 ring-base-300">
+                                                                        <Image
+                                                                            src={
+                                                                                person
+                                                                                    ?.data
+                                                                                    .photo ||
+                                                                                default_avatar
+                                                                            }
+                                                                            alt={
+                                                                                person
+                                                                                    ?.data
+                                                                                    .name ||
+                                                                                email
+                                                                            }
+                                                                            width={
+                                                                                32
+                                                                            }
+                                                                            height={
+                                                                                32
+                                                                            }
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="overflow-hidden">
+                                                                    <p class="font-medium text-sm truncate group-hover:text-primary transition-colors">
+                                                                        {person
+                                                                            ?.data
+                                                                            .name ||
+                                                                            email}
+                                                                    </p>
+                                                                </div>
+                                                            </a>
+                                                        </li>
+                                                    );
+                                                },
+                                            )}
+                                        </ul>
+                                    </div>
+                                )
+                        }
+                    </div>
+                </div>
+            </aside>
         </div>
-    </article>
+    </div>
 </BaseLayout>
