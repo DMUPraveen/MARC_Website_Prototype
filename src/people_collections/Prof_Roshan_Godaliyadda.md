@@ -1,5 +1,6 @@
 ---
 email: roshang@eng.pdn.ac.lk
-post: Director
+post: Deputy Director
 name: Prof. Roshan Godaliyadda
+photo: ./photos/prof_godaliyadda.jpg
 ---

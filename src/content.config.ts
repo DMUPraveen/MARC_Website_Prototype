@@ -33,10 +33,11 @@ const people = defineCollection({
             base: "src/people_collections/"
         }
     ),
-    schema: () => z.object({
+    schema: ({ image }) => z.object({
         email: z.string().email(),
         post: z.string(),
         name: z.string(),
+        photo: image().optional(),
     })
 
 });

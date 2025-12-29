@@ -2,6 +2,9 @@
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import "../../styles/app.css";
+import defaul_avatar from "../../assets/avatar_default.svg";
+
+// --- Data Fetching Logic (Unchanged) ---
 export async function getStaticPaths() {
     const people = await getCollection("people");
     return people.map((person) => ({
@@ -10,30 +13,149 @@ export async function getStaticPaths() {
     }));
 }
 
+const projects = await getCollection("projects");
 const { person } = Astro.props;
 const { Content } = await render(person);
+
+// Filter projects where this person is a member or supervisor
+const filtered_projects = projects.filter((project) => {
+    return (
+        project.data.projectMembers.includes(person.data.email) ||
+        project.data.supervisors.includes(person.data.email)
+    );
+});
 ---
 
 <BaseLayout>
-    <main class="flex justify-center items-center min-h-screen bg-base-200">
-        <div class="card w-full max-w-xl bg-base-100 shadow-xl">
-            <div class="card-body">
-                <h2 class="card-title text-3xl font-bold text-primary">
-                    {person.data.name}
-                </h2>
-                <p class="text-lg text-secondary">{person.data.post}</p>
-                <p class="text-md">
-                    <span class="font-semibold">Email:</span>
-                    <a
-                        href={`mailto:${person.data.email}`}
-                        class="link link-primary">{person.data.email}</a
-                    >
-                </p>
-                <div class="divider"></div>
-                <article class="prose max-w-none">
-                    <Content />
-                </article>
-            </div>
+    {/* Main Container */}
+    <div class="container mx-auto px-4 py-12 max-w-6xl">
+        {/* Breadcrumbs (Optional but nice for navigation) */}
+        <div class="text-sm breadcrumbs mb-6 text-base-content/70">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/people">People</a></li>
+                <li>{person.data.name}</li>
+            </ul>
         </div>
-    </main>
+
+        {/* Responsive Grid: Sidebar (1 col) + Main Content (2 cols) */}
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+            {/* --- LEFT SIDEBAR: Personal Info --- */}
+            <aside class="lg:col-span-4 space-y-6">
+                <div
+                    class="card bg-base-100 shadow-xl border border-base-200 sticky top-10"
+                >
+                    <div class="card-body items-center text-center">
+                        {/* Avatar Placeholder: Uses first letter of name */}
+                        <div class="avatar">
+                            <div class="w-50 rounded">
+                                <img
+                                    src={person.data.photo
+                                        ? person.data.photo.src
+                                        : defaul_avatar.src}
+                                />
+                            </div>
+                        </div>
+                        <h1 class="card-title text-2xl font-bold">
+                            {person.data.name}
+                        </h1>
+
+                        <div class="badge badge-secondary badge-outline mt-2">
+                            {person.data.post}
+                        </div>
+
+                        <div class="divider my-4"></div>
+
+                        {/* Contact Details */}
+                        <div class="w-full text-left space-y-3">
+                            <div>
+                                <h3
+                                    class="text-xs font-bold uppercase text-base-content/50 mb-1"
+                                >
+                                    Contact
+                                </h3>
+                                <a
+                                    href={`mailto:${person.data.email}`}
+                                    class="flex items-center gap-2 hover:text-primary transition-colors text-sm break-all"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                        class="w-4 h-4"
+                                    >
+                                        <path
+                                            d="M3 4a2 2 0 00-2 2v1.161l8.441 4.221a1.25 1.25 0 001.118 0L19 7.162V6a2 2 0 00-2-2H3z"
+                                        ></path>
+                                        <path
+                                            d="M19 8.839l-7.77 3.885a2.75 2.75 0 01-2.46 0L1 8.839V14a2 2 0 002 2h14a2 2 0 002-2V8.839z"
+                                        ></path>
+                                    </svg>
+                                    {person.data.email}
+                                </a>
+                            </div>
+                            {
+                                /* You can add more sidebar items here like Links, Phone, Office Location */
+                            }
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            {/* --- RIGHT COLUMN: Bio & Projects --- */}
+            <main class="lg:col-span-8 space-y-12">
+                {/* Section 1: Biography */}
+                <section>
+                    <h2
+                        class="text-3xl font-bold mb-6 border-b pb-2 border-base-300"
+                    >
+                        Biography
+                    </h2>
+                    <article
+                        class="prose prose-lg max-w-none prose-headings:text-primary prose-a:text-primary"
+                    >
+                        <Content />
+                    </article>
+                </section>
+
+                {/* Section 2: Associated Projects */}
+                {
+                    filtered_projects.length > 0 && (
+                        <section>
+                            <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                                Associated Projects
+                                <span class="badge badge-neutral">
+                                    {filtered_projects.length}
+                                </span>
+                            </h2>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {filtered_projects.map((p) => (
+                                    <a
+                                        href={`/projects/${p.id}`}
+                                        class="card bg-base-100 shadow-md border border-base-200 hover:shadow-xl hover:border-primary transition-all duration-300"
+                                    >
+                                        <div class="card-body p-6">
+                                            <h3 class="card-title text-lg">
+                                                {p.data.project}
+                                            </h3>
+                                            <p class="text-sm text-base-content/70 line-clamp-2">
+                                                {p.data.researchArea ||
+                                                    "View project details for more information..."}
+                                            </p>
+                                            <div class="card-actions justify-end mt-4">
+                                                <div class="badge badge-outline text-xs">
+                                                    View Project &rarr;
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                ))}
+                            </div>
+                        </section>
+                    )
+                }
+            </main>
+        </div>
+    </div>
 </BaseLayout>
