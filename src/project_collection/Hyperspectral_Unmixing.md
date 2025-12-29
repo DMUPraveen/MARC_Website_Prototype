@@ -1,12 +1,11 @@
 ---
 project: "Hyperspectral Unmixing"
 projectMembers: 
- - "dmu.praveen@gmail.com"
- - "e19328@eng.pdn.ac.lk"
- - "e19445@eng.pdn.ac.lk"
+ - dmu.praveen@gmail.com
+ - tharuwicky7273@gmail.com
 supervisors: 
  - "roshang@eng.pdn.ac.lk"
-researchArea: "Computer Vision"
+researchArea: Computer Vision
 researchPillars: 
  - "AI in Engineering"
 coverImage: ./cover_images/Hyperspectral_Unmixing.jpg

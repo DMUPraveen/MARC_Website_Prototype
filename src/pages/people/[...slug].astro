@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from "astro:content";
+import { Image } from "astro:assets"; // Import the Image component
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import "../../styles/app.css";
 import defaul_avatar from "../../assets/avatar_default.svg";
@@ -49,10 +50,11 @@ const filtered_projects = projects.filter((project) => {
                         {/* Avatar Placeholder: Uses first letter of name */}
                         <div class="avatar">
                             <div class="w-50 rounded">
-                                <img
-                                    src={person.data.photo
-                                        ? person.data.photo.src
-                                        : defaul_avatar.src}
+                                <Image
+                                    src={person.data.photo ?? defaul_avatar}
+                                    alt={person.data.name}
+                                    width={200}
+                                    height={200}
                                 />
                             </div>
                         </div>
