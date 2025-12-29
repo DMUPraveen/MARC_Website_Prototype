@@ -1,0 +1,32 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import "../../styles/app.css";
+
+export async function getStaticPaths() {
+    const projects = await getCollection("projects");
+    return projects.map((project) => ({
+        params: { slug: project.id },
+        props: { project },
+    }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+---
+
+<BaseLayout>
+    <main class="p-4 flex flex-col gap-10">
+        <article class="prose prose-lg max-w-none">
+            <h1>{project.data.project}</h1>
+            <p><strong>Research Area:</strong> {project.data.researchArea}</p>
+            <p>
+                <strong>Authors:</strong>
+                {project.data.projectMembers.join(", ")}
+            </p>
+            <div>
+                <Content />
+            </div>
+        </article>
+    </main></BaseLayout
+>

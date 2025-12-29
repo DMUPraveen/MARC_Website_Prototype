@@ -42,7 +42,9 @@ const relatedProjects = projects.filter(
                 {
                     relatedProjects.map((project) => (
                         <li>
-                            <a>{project.data.project}</a>
+                            <a href={`/projects/${project.id}`}>
+                                {project.data.project}
+                            </a>
                         </li>
                     ))
                 }
