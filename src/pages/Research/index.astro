@@ -1,0 +1,35 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import "../../styles/app.css";
+import ResearchAreaCard from "../../components/ResearchAreaCard.astro";
+import GenAICover from "../../assets/Gen_AI_Cover.jpg";
+import ComputerVisionCover from "../../assets/Computer_Vision_Cover.jpg";
+---
+
+<BaseLayout>
+    <main class="p-4 flex flex-col gap-10">
+        <h1 class="text-6xl font-bold mb-4">Research Areas</h1>
+        <ResearchAreaCard Area="Generative AI" ImageUrl={GenAICover}>
+            Generative artificial intelligence (Generative AI, GenAI, or GAI) is
+            a subfield of artificial intelligence that uses generative models to
+            generate text, images, videos, audio, software code or other forms
+            of data. These models learn the underlying patterns and structures
+            of their training data and use them to produce new data in response
+            to input, which often comes in the form of natural language prompts.
+        </ResearchAreaCard>
+
+        <ResearchAreaCard Area="Computer Vision" ImageUrl={ComputerVisionCover}>
+            Computer vision tasks include methods for acquiring, processing,
+            analyzing, and understanding digital images, and extraction of
+            high-dimensional data from the real world in order to produce
+            numerical or symbolic information, e.g. in the form of
+            decisions."Understanding" in this context signifies the
+            transformation of visual images (the input to the retina) into
+            descriptions of the world that make sense to thought processes and
+            can elicit appropriate action. This image understanding can be seen
+            as the disentangling of symbolic information from image data using
+            models constructed with the aid of geometry, physics, statistics,
+            and learning theory.
+        </ResearchAreaCard>
+    </main>
+</BaseLayout>
