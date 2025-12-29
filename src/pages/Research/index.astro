@@ -11,12 +11,8 @@ const images = import.meta.glob<{ default: ImageMetadata }>(
 );
 const imagekey_to_src = (imageKey: string) => {
     imageKey = `/src/assets/${imageKey}`;
-    console.log("Hello");
-    console.log(imageKey);
-    console.log("Bye");
     return images[imageKey].default;
 };
-console.log(researchAreas);
 ---
 
 <BaseLayout>

@@ -9,7 +9,7 @@ supervisors:
 researchArea: "Computer Vision"
 researchPillars: 
  - "AI in Engineering"
-coverImage: "./cover_images/hypersepctral_Unmixing.jpg"
+coverImage: ./cover_images/Hyperspectral_Unmixing.jpg
 ---
 
 # Hyperspectral Unmxinig
