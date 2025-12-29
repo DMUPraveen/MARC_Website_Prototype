@@ -2,6 +2,7 @@
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import "../../styles/app.css";
+import Breadcrumb from "../../components/Breadcrumb.astro";
 
 export async function getStaticPaths() {
     const projects = await getCollection("projects");
@@ -23,47 +24,50 @@ const { Content } = await render(project);
 ---
 
 <BaseLayout>
-    <main class="p-4 flex flex-col gap-10">
-        <article class="prose prose-lg max-w-none">
-            <h1>{project.data.project}</h1>
-            <p><strong>Research Area:</strong> {project.data.researchArea}</p>
-            <p>
-                <strong>Authors:</strong>
-                {
-                    project.data.projectMembers.map((email) => (
-                        <a
-                            href={
-                                peopleDict[email]
-                                    ? `/people/${peopleDict[email]?.id}/`
-                                    : ""
-                            }
-                            class="badge badge-ghost gap-1 no-underline"
-                        >
-                            {peopleDict[email]?.data.name || email}
-                        </a>
-                    ))
-                }
-            </p>
-            <p>
-                <strong>Supervisors:</strong>
-                {
-                    project.data.supervisors.map((email) => (
-                        <a
-                            href={
-                                peopleDict[email]
-                                    ? `/people/${peopleDict[email]?.id}/`
-                                    : ""
-                            }
-                            class="badge badge-ghost gap-1 no-underline"
-                        >
-                            {peopleDict[email]?.data.name || email}
-                        </a>
-                    ))
-                }
-            </p>
-            <div>
-                <Content />
-            </div>
-        </article>
-    </main></BaseLayout
->
+    <Breadcrumb>
+        <li><a href="/">Home</a></li>
+        <li><a href="/projects">Projects</a></li>
+        <li>{project.data.project}</li>
+    </Breadcrumb>
+    <article class="prose prose-lg max-w-none">
+        <h1>{project.data.project}</h1>
+        <p><strong>Research Area:</strong> {project.data.researchArea}</p>
+        <p>
+            <strong>Authors:</strong>
+            {
+                project.data.projectMembers.map((email) => (
+                    <a
+                        href={
+                            peopleDict[email]
+                                ? `/people/${peopleDict[email]?.id}/`
+                                : ""
+                        }
+                        class="badge badge-ghost gap-1 no-underline"
+                    >
+                        {peopleDict[email]?.data.name || email}
+                    </a>
+                ))
+            }
+        </p>
+        <p>
+            <strong>Supervisors:</strong>
+            {
+                project.data.supervisors.map((email) => (
+                    <a
+                        href={
+                            peopleDict[email]
+                                ? `/people/${peopleDict[email]?.id}/`
+                                : ""
+                        }
+                        class="badge badge-ghost gap-1 no-underline"
+                    >
+                        {peopleDict[email]?.data.name || email}
+                    </a>
+                ))
+            }
+        </p>
+        <div>
+            <Content />
+        </div>
+    </article>
+</BaseLayout>
