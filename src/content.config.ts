@@ -41,5 +41,20 @@ const people = defineCollection({
     })
 
 });
+
+
+const publications = defineCollection({
+    loader: file('src/publication_collection/publications.json'),
+    schema: z.object({
+        paper_title: z.string(),
+        venue: z.string(),
+        type: z.string(),
+        doi: z.string().url(),
+        authors: z.array(z.string()),
+        publication_date: z.string().date(),
+        people: z.array(z.string().email()),
+        project: z.string()
+    })
+});
 // 5. Export a single `collections` object to register your collection(s)
-export const collections = { projects, people };
+export const collections = { projects, people, publications };

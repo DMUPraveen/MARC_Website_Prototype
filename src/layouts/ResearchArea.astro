@@ -106,7 +106,7 @@ const relatedProjects = projects.filter(
                                     <div class="flex flex-wrap gap-2 mt-2">
                                         {project.data.researchPillars
                                             ?.slice(0, 3)
-                                            .map((pillar) => (
+                                            .map((pillar: any) => (
                                                 <span class="badge badge-sm badge-outline text-xs opacity-70">
                                                     {pillar}
                                                 </span>
