@@ -12,7 +12,7 @@ const projects = defineCollection({
     loader: glob(
         {
             pattern: "**/*.md",
-            base: "src/project_collection/"
+            base: "src/collection_projects/"
         }
     ),
     schema: ({ image }) => z.object({
@@ -30,7 +30,7 @@ const people = defineCollection({
     loader: glob(
         {
             pattern: "**/*.md",
-            base: "src/people_collections/"
+            base: "src/collection_people/"
         }
     ),
     schema: ({ image }) => z.object({
@@ -44,7 +44,7 @@ const people = defineCollection({
 
 
 const publications = defineCollection({
-    loader: file('src/publication_collection/publications.json'),
+    loader: file('src/collection_publications/publications.json'),
     schema: z.object({
         paper_title: z.string(),
         venue: z.string(),
@@ -59,7 +59,7 @@ const publications = defineCollection({
 
 
 const social_news = defineCollection({
-    loader: file('src/news_collection/social_news.json'),
+    loader: file('src/collection_news/social_news.json'),
     schema: z.object({
         title: z.string(),
         date: z.string().date(),
@@ -73,7 +73,7 @@ const social_news = defineCollection({
 
 const news = defineCollection({
     // Load markdown files from your specific folder
-    loader: glob({ pattern: "**/*.md", base: "src/news_collection/" }),
+    loader: glob({ pattern: "**/*.md", base: "src/collection_news/" }),
     schema: ({ image }) => z.object({
         title: z.string(),
         date: z.date(), // Zod will automatically parse the YYYY-MM-DD string

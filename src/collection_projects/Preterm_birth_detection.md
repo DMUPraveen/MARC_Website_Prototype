@@ -1,5 +1,5 @@
 ---
-project: "Dummy"
+project: Preterm Birth Detection
 projectMembers: 
  - "e19328@eng.pdn.ac.lk"
 supervisors: 

@@ -8,7 +8,7 @@ import preact from "@astrojs/preact";
 
 export default defineConfig({
   vite: {
-      plugins: [tailwindcss()],
+    plugins: [tailwindcss()],
   },
 
   integrations: [mdx(), preact()],
