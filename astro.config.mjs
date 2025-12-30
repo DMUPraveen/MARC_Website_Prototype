@@ -4,10 +4,12 @@ import tailwindcss from "@tailwindcss/vite";
 
 import mdx from "@astrojs/mdx";
 
+import preact from "@astrojs/preact";
+
 export default defineConfig({
   vite: {
       plugins: [tailwindcss()],
   },
 
-  integrations: [mdx()],
+  integrations: [mdx(), preact()],
 });
