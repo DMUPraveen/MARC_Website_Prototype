@@ -56,5 +56,30 @@ const publications = defineCollection({
         project: z.string()
     })
 });
+
+
+const social_news = defineCollection({
+    loader: file('src/news_collection/social_news.json'),
+    schema: z.object({
+        title: z.string(),
+        date: z.string().date(),
+        source: z.enum(["Facebook", "LinkedIn", "Web", "Twitter"]), // Where does this link go?
+        url: z.string().url(),
+        thumbnail: z.string().optional(), // Optional: Path to an image
+        embed: z.string().optional() // Optional: Embed code for videos or other media
+    })
+});
+
+
+const news = defineCollection({
+    // Load markdown files from your specific folder
+    loader: glob({ pattern: "**/*.md", base: "src/news_collection/" }),
+    schema: ({ image }) => z.object({
+        title: z.string(),
+        date: z.date(), // Zod will automatically parse the YYYY-MM-DD string
+        cover: image().optional(), // Validate the cover image exists
+        short: z.string(), // The summary for the card
+    })
+});
 // 5. Export a single `collections` object to register your collection(s)
-export const collections = { projects, people, publications };
+export const collections = { projects, people, publications, social_news, news };
